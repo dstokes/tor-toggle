@@ -11,7 +11,7 @@ chrome.browserAction.onClicked.addListener(function(tab) {
     if(xhr.readyState === 4 && xhr.status === 200) {
       var resp = xhr.responseText
         , stat = resp.indexOf('Sorry') === -1 ? 'connected' : 'not_connected';
-      chrome.browserAction.setIcon({ path: '/icons/' + stat + '.png' });
+      chrome.browserAction.setIcon({ path: { 38: '/icons/' + stat + '.png' } });
     } 
     setTimeout(check, 50000);
   };
