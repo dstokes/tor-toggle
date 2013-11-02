@@ -1,0 +1,19 @@
+{
+  "manifest_version": 2,
+
+  "name": "tor-checker",
+  "description": "Check if browser requests are going throught the tor network",
+  "version": "1.0",
+
+  "browser_action": {
+    "default_icon": "icons/not_connected.png"
+  },
+
+  "permissions": [
+    "https://check.torproject.org/"
+  ],
+
+  "background": {
+    "scripts": ["torcheck.js"]
+  }
+}
