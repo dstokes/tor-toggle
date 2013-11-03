@@ -30,10 +30,14 @@ window.addEventListener('offline', function() {
  */
 chrome.proxy.onProxyError.addListener(function(details) {
   console.error('Proxy Error: ' + details.error);
-  console.info('Make sure tor is running at localhost:9050');
 
   // disable proxy
   toggleTorProxy(onConnectionChange);
+  notify(
+    'Proxy Error',
+    'There was a problem connecting to your local tor proxy.  ' +
+    'Make sure tor is running on localhost:9050.'
+  );
 });
 
 /**
@@ -89,10 +93,16 @@ function onProxyCheck(err, isTor) {
   if(err) {
     console.warn('Failed to check tor status at ' + url);
     return chrome.browserAction.setTitle({
-      title: 'Unable to check tor status'
+      title: 'Unable to check tor status at ' + url
     });
   }
   onConnectionChange(isTor);
+}
+
+function notify(title, message) {
+  webkitNotifications
+    .createNotification('icons/icon48.png', title, message)
+    .show();
 }
 
 // check proxy status on boot
