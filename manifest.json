@@ -16,6 +16,7 @@
   },
 
   "permissions": [
+    "proxy",
     "https://check.torproject.org/"
   ],
 
