@@ -66,7 +66,7 @@ function onConnectionChange(connected) {
     , title = "You "+ stat +" connected to the tor network";
 
   chrome.browserAction.setTitle({ title: title });
-  chrome.browserAction.setIcon({ path: { 38: '/icons/' + image } });
+  chrome.browserAction.setIcon({ path: { 38: 'src/icons/' + image } });
 }
 
 /**
@@ -101,7 +101,7 @@ function onProxyCheck(err, isTor) {
 
 function notify(title, message) {
   webkitNotifications
-    .createNotification('icons/icon48.png', title, message)
+    .createNotification('src/icons/icon48.png', title, message)
     .show();
 }
 
