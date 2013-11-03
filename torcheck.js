@@ -1,18 +1,23 @@
 var url = "https://check.torproject.org"
   , checker = null;
 
+// update the icon on network events
+window.addEventListener('online', check);
+window.addEventListener('offline', function() {
+  updateIcon({ connected: false });
+});
+
 // listen for icon clicks
 chrome.browserAction.onClicked.addListener(function(tab) {
-  clearTimeout(checker);
   check();
   chrome.tabs.create({ url: url });
 });
 
-function updateIcon(connected) {
+function updateIcon(options) {
   var image = 'not_connected.png'
     , title = 'You are not connected to the tor network';
 
-  if(connected) {
+  if(options.connected) {
     image = 'connected.png';
     title = 'You are connected to the tor network';
   }
@@ -24,13 +29,15 @@ function updateIcon(connected) {
 function check() {
   var xhr = new XMLHttpRequest();
   var onStateChange = function() {
-    var stat = 'not_connected';
     if(xhr.readyState === 4) {
-      updateIcon(xhr.responseText.indexOf('Sorry') === -1);
+      var resp = xhr.responseText;
+      updateIcon({ connected: resp && resp.indexOf('Sorry') === -1 });
     }
+    // check status every 5 minutes
     checker = setTimeout(check, 50000);
   };
 
+  clearTimeout(checker);
   xhr.onreadystatechange = onStateChange;
   xhr.open("GET", url);
   xhr.send();
