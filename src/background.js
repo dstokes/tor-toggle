@@ -24,25 +24,6 @@ window.addEventListener('offline', function() {
   onConnectionChange(false);
 });
 
-/**
- * Strip referrer headers on request
- */
-chrome.webRequest.onBeforeSendHeaders.addListener(
-  function(details) {
-    if(proxied) {
-      for(var i = 0, l = details.requestHeaders.length; i < l; i++) {
-        if(details.requestHeaders[i].name === 'Referer') {
-          details.requestHeaders.splice(i, 1);
-          break;
-        }
-      }
-    }
-    return { requestHeaders: details.requestHeaders };
-  },
-  { urls: ['<all_urls>'] },
-  ['blocking', 'requestHeaders']
-);
-
 // watch for proxy errors
 /**
  * Update browser action icon and proxy settings on proxy error
@@ -72,7 +53,20 @@ chrome.browserAction.onClicked.addListener(function(tab) {
 function toggleTorProxy(cb) {
   var config = proxied ? system_network : tor_network;
   chrome.proxy.settings.set({ value: config, scope: 'regular' }, function() {
-    cb(proxied = !proxied);
+    proxied = !proxied;
+
+    // update header processing
+    chrome.webRequest.onBeforeSendHeaders.removeListener(processHeaders);
+    if(proxied) {
+      // alter headers on outgoing requests
+      chrome.webRequest.onBeforeSendHeaders.addListener(
+        processHeaders,
+        { urls: ['<all_urls>'] },
+        ['blocking', 'requestHeaders']
+      );
+    }
+
+    cb(proxied);
   });
 }
 
@@ -116,6 +110,19 @@ function onProxyCheck(err, isTor) {
     });
   }
   onConnectionChange(isTor);
+}
+
+/**
+ * Function strip headers from outgoing requests
+ */
+function processHeaders(details) {
+  for(var i = 0, l = details.requestHeaders.length; i < l; i++) {
+    if(details.requestHeaders[i].name === 'Referer') {
+      details.requestHeaders.splice(i, 1);
+      break;
+    }
+  }
+  return { requestHeaders: details.requestHeaders };
 }
 
 function notify(title, message) {
