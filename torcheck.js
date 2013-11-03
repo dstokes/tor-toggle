@@ -8,11 +8,14 @@ chrome.browserAction.onClicked.addListener(function(tab) {
 (function check() {
   var xhr = new XMLHttpRequest();
   var onStateChange = function() {
-    if(xhr.readyState === 4 && xhr.status === 200) {
-      var resp = xhr.responseText
-        , stat = resp.indexOf('Sorry') === -1 ? 'connected' : 'not_connected';
+    var stat = 'not_connected';
+    if(xhr.readyState === 4) {
+      if(   xhr.status === 200
+         && xhr.responseText.indexOf('Sorry') !== -1) {
+        stat = 'connected';
+      }
       chrome.browserAction.setIcon({ path: { 38: '/icons/' + stat + '.png' } });
-    } 
+    }
     setTimeout(check, 50000);
   };
 
