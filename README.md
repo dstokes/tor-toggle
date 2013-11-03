@@ -37,8 +37,3 @@ actual ip address. If complete annonymity is what you seek, try configuring
 a new "Location" in your Network Settings (OSX) and switching to it when
 wanting to browse under tor. The extension recognizes network changes and
 will accurately report your tor connection status.
-
-todo
-====
-
-- Disable http referrer headers when enabling the tor proxy
