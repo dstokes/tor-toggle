@@ -3,6 +3,8 @@ tor-checker
 
 A simple chrome extension for reporting your current tor connection status.
 
+![tor-checker](docs/screenshot.png)
+
 installing
 ==========
 
