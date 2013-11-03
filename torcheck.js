@@ -1,8 +1,11 @@
-var checker = "https://check.torproject.org";
+var url = "https://check.torproject.org"
+  , checker = null;
 
 // listen for icon clicks
 chrome.browserAction.onClicked.addListener(function(tab) {
-  chrome.tabs.create({ url: checker });  
+  clearTimeout(checker);
+  check();
+  chrome.tabs.create({ url: url });
 });
 
 (function check() {
@@ -11,15 +14,15 @@ chrome.browserAction.onClicked.addListener(function(tab) {
     var stat = 'not_connected';
     if(xhr.readyState === 4) {
       if(   xhr.status === 200
-         && xhr.responseText.indexOf('Sorry') !== -1) {
+         && xhr.responseText.indexOf('Sorry') === -1) {
         stat = 'connected';
       }
       chrome.browserAction.setIcon({ path: { 38: '/icons/' + stat + '.png' } });
     }
-    setTimeout(check, 50000);
+    checker = setTimeout(check, 50000);
   };
 
   xhr.onreadystatechange = onStateChange;
-  xhr.open("GET", checker);
+  xhr.open("GET", url);
   xhr.send();
 })();
