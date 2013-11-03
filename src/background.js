@@ -24,6 +24,25 @@ window.addEventListener('offline', function() {
   onConnectionChange(false);
 });
 
+/**
+ * Strip referrer headers on request
+ */
+chrome.webRequest.onBeforeSendHeaders.addListener(
+  function(details) {
+    if(proxied) {
+      for(var i = 0, l = details.requestHeaders.length; i < l; i++) {
+        if(details.requestHeaders[i].name === 'Referer') {
+          details.requestHeaders.splice(i, 1);
+          break;
+        }
+      }
+    }
+    return { requestHeaders: details.requestHeaders };
+  },
+  { urls: ['<all_urls>'] },
+  ['blocking', 'requestHeaders']
+);
+
 // watch for proxy errors
 /**
  * Update browser action icon and proxy settings on proxy error

@@ -17,7 +17,13 @@
 
   "permissions": [
     "proxy",
+
     "notifications",
+
+    "<all_urls>",
+    "webRequest",
+    "webRequestBlocking",
+
     "https://check.torproject.org/"
   ],
 
