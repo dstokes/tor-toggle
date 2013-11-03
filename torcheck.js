@@ -35,6 +35,7 @@ function onReadyStateChange() {
 }
 
 function check() {
+  clearTimeout(checker);
   var xhr = new XMLHttpRequest();
   xhr.onreadystatechange = onReadyStateChange;
   xhr.open("GET", url);
