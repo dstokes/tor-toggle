@@ -26,19 +26,17 @@ function updateIcon(options) {
   chrome.browserAction.setIcon({ path: { 38: '/icons/' + image } });
 }
 
+function onReadyStateChange() {
+  if(this.readyState === 4) {
+    var resp = this.responseText;
+    updateIcon({ connected: resp && resp.indexOf('Sorry') === -1 });
+    checker = setTimeout(check, 100000);
+  }
+}
+
 function check() {
   var xhr = new XMLHttpRequest();
-  var onStateChange = function() {
-    if(xhr.readyState === 4) {
-      var resp = xhr.responseText;
-      updateIcon({ connected: resp && resp.indexOf('Sorry') === -1 });
-    }
-    // check status every 5 minutes
-    checker = setTimeout(check, 50000);
-  };
-
-  clearTimeout(checker);
-  xhr.onreadystatechange = onStateChange;
+  xhr.onreadystatechange = onReadyStateChange;
   xhr.open("GET", url);
   xhr.send();
 }
