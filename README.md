@@ -3,7 +3,7 @@ tor-toggle
 
 A simple chrome extension for toggling tor proxy settings
 
-![tor-toggle](docs/toggle.gif)
+![tor-toggle](docs/demo.gif)
 
 usage
 =====
